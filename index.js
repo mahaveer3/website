@@ -1,3 +1,97 @@
+function addAnimationDelays() {
+    document.querySelectorAll('.product-card').forEach((card, index) => {
+        card.style.setProperty('--i', index);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const searchClose = document.querySelector('.search-close');
+    
+    // Clear search input
+    searchClose.addEventListener('click', () => {
+        searchInput.value = '';
+        searchInput.focus();
+        filterProducts();
+    });
+    
+    // Existing event listeners...
+    initScrollReveal();
+    
+    // Replace category buttons with category items
+    const categoryItems = document.querySelectorAll('.category-item');
+    
+    categoryItems.forEach(item => {
+        item.addEventListener('click', function() {
+            categoryItems.forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+            currentCategory = this.dataset.category;
+            filterProducts();
+            const showcase = document.getElementById('categoryShowcase');
+            const toggleBtn = document.querySelector('.category-toggle-btn');
+            if (showcase && toggleBtn) {
+                showcase.classList.remove('show');
+                toggleBtn.classList.remove('active');
+                setTimeout(() => {
+                    showcase.style.display = 'none';
+                }, 300);
+            }
+        });
+    });
+
+    // Add this function to update category counts
+    function updateCategoryCounts() {
+        const counts = {};
+        products.forEach(product => {
+            if (product.category) {
+                counts[product.category] = (counts[product.category] || 0) + 1;
+            }
+        });
+
+        categoryItems.forEach(item => {
+            const category = item.dataset.category;
+            const count = counts[category] || 0;
+            const countElement = item.querySelector('.item-count');
+            if (countElement) {
+                countElement.textContent = `${count} items`;
+                
+                // Add animation when count changes
+                countElement.classList.remove('count-updated');
+                void countElement.offsetWidth; // Trigger reflow
+                countElement.classList.add('count-updated');
+            }
+        });
+    }
+
+    // Update the loadProducts function to include category counts
+    const originalLoadProducts = loadProducts;
+    loadProducts = async function() {
+        await originalLoadProducts();
+        updateCategoryCounts();
+    };
+
+    // Update category toggle functionality
+    const toggleBtn = document.querySelector('.category-toggle-btn');
+    const showcase = document.getElementById('categoryShowcase');
+    
+    if (toggleBtn && showcase) {
+        toggleBtn.addEventListener('click', () => {
+            toggleBtn.classList.toggle('active');
+            if (toggleBtn.classList.contains('active')) {
+                showcase.style.display = 'grid';
+                setTimeout(() => {
+                    showcase.classList.add('show');
+                }, 10);
+            } else {
+                showcase.classList.remove('show');
+                setTimeout(() => {
+                    showcase.style.display = 'none';
+                }, 300);
+            }
+        });
+    }
+});
+
 let products = [];
 let filteredProducts = [];
 let currentCategory = 'all';
@@ -57,7 +151,7 @@ function displayProducts(productsData) {
                 <h3 class="product-title" title="${product.name}">${product.name}</h3>
                 <div class="product-price">₹${product.price.toLocaleString('en-IN')}</div>
                 <div class="product-actions">
-                    <button class="add-to-cart-btn">Add to Cart</button>
+                    <button class="view-more-btn">View More</button>
                     <button class="wishlist-btn">♥</button>
                 </div>
             </div>
@@ -66,6 +160,8 @@ function displayProducts(productsData) {
         productCard.addEventListener('click', () => showProductPopup(product));
         productsList.appendChild(productCard);
     });
+    
+    addAnimationDelays();
 }
 
 function showProductPopup(product) {
@@ -236,6 +332,7 @@ function getProductImageUrl(product) {
     return images.length > 0 ? images[0] : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2VlZSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjgiIGZpbGw9IiNhYWEiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5ObyBJbWFnZTwvdGV4dD48L3N2Zz4=';
 }
 
+// Update the initializeZoom function
 function initializeZoom() {
     const container = document.getElementById('productZoomContainer');
     const image = document.getElementById('productZoomImage');
@@ -253,22 +350,25 @@ function initializeZoom() {
         imageLoaded = true;
         naturalWidth = this.naturalWidth;
         naturalHeight = this.naturalHeight;
-
-        // Set the background image of the popup
+        
         popup.style.backgroundImage = `url('${this.src}')`;
+        popup.style.display = 'block';
+        popup.style.opacity = '0';
         
-        // Calculate zoom ratio based on natural image dimensions
-        const zoomRatio = 2;
-        const aspectRatio = naturalWidth / naturalHeight;
-        
-        // Use natural dimensions for background size to prevent blurriness
-        if (aspectRatio > 1) {
-            // Landscape image
-            popup.style.backgroundSize = `${naturalWidth * zoomRatio}px auto`;
-        } else {
-            // Portrait image
-            popup.style.backgroundSize = `auto ${naturalHeight * zoomRatio}px`;
-        }
+        // Set background size based on zoom level
+        const zoomLevel = 2; // Increased zoom level
+        popup.style.backgroundSize = `${naturalWidth * zoomLevel}px ${naturalHeight * zoomLevel}px`;
+    });
+
+    container.addEventListener('mouseenter', () => {
+        if (!imageLoaded) return;
+        zoomArea.style.display = 'block';
+        popup.style.opacity = '1';
+    });
+
+    container.addEventListener('mouseleave', () => {
+        zoomArea.style.display = 'none';
+        popup.style.opacity = '0';
     });
 
     container.addEventListener('mousemove', function(e) {
@@ -278,44 +378,17 @@ function initializeZoom() {
         const mouseX = e.clientX - rect.left;
         const mouseY = e.clientY - rect.top;
 
-        // Show zoom elements when mouse is over the container
-        if (mouseX >= 0 && mouseX <= rect.width && mouseY >= 0 && mouseY <= rect.height) {
-            zoomArea.style.display = 'block';
-            popup.style.display = 'block';
-            popup.style.visibility = 'visible';
-            popup.style.opacity = '1';
+        // Update zoom area position to follow cursor
+        zoomArea.style.left = `${mouseX}px`;
+        zoomArea.style.top = `${mouseY}px`;
 
-            // Position the zoom area
-            const zoomAreaWidth = zoomArea.offsetWidth;
-            const zoomAreaHeight = zoomArea.offsetHeight;
-            
-            let newX = mouseX - (zoomAreaWidth / 2);
-            let newY = mouseY - (zoomAreaHeight / 2);
+        // Calculate percentages for background position
+        const xPercent = (mouseX / rect.width) * 100;
+        const yPercent = (mouseY / rect.height) * 100;
 
-            // Constrain zoom area to container bounds
-            newX = Math.max(0, Math.min(newX, rect.width - zoomAreaWidth));
-            newY = Math.max(0, Math.min(newY, rect.height - zoomAreaHeight));
-
-            zoomArea.style.transform = `translate(${newX}px, ${newY}px)`;
-
-            // Calculate the position for the zoomed image
-            const xPercentage = (newX / (rect.width - zoomAreaWidth)) * 100;
-            const yPercentage = (newY / (rect.height - zoomAreaHeight)) * 100;
-
-            // Update the background position of the popup
-            popup.style.backgroundPosition = `${xPercentage}% ${yPercentage}%`;
-        } else {
-            hideZoom();
-        }
+        // Update popup background position
+        popup.style.backgroundPosition = `${xPercent}% ${yPercent}%`;
     });
-
-    function hideZoom() {
-        zoomArea.style.display = 'none';
-        popup.style.visibility = 'hidden';
-        popup.style.opacity = '0';
-    }
-
-    container.addEventListener('mouseleave', hideZoom);
 }
 
 // Add this helper function to handle both image formats
@@ -338,12 +411,12 @@ function filterProducts() {
     filteredProducts = products.filter(product => {
         const matchesSearch = product.name.toLowerCase().includes(searchTerm) ||
                             (product.description && product.description.toLowerCase().includes(searchTerm));
-        const matchesCategory = currentCategory === 'all' || product.category === currentCategory;
+        const matchesCategory = currentCategory === 'all' || 
+                              (product.category && product.category.toLowerCase() === currentCategory.toLowerCase());
         
         return matchesSearch && matchesCategory;
     });
     
-    sortProducts();
     displayProducts(filteredProducts);
 }
 
@@ -439,3 +512,22 @@ document.addEventListener('DOMContentLoaded', function() {
     
     loadProducts();
 });
+
+function initScrollReveal() {
+    const elements = document.querySelectorAll('.product-card, .category-nav, .search-container');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '50px'
+    });
+
+    elements.forEach(el => observer.observe(el));
+}
