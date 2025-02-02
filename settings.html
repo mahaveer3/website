@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Settings - Admin Dashboard</title>
+    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="settings.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <style>
+        /* Add smooth transition for theme changes */
+        .theme-transition,
+        .theme-transition * {
+            transition: all 0.3s ease-in-out !important;
+        }
+    </style>
+</head>
+
+<body class="fade-in">
+    <!-- Component Placeholders -->
+    <div id="header-placeholder"></div>
+    
+    <div class="layout-container">
+        <div id="sidebar-placeholder"></div>
+        
+        <main class="main-content">
+            <div class="settings-bg-wrapper">
+                <div class="settings-container">
+                    <header class="settings-header">
+                        <h1>Settings</h1>
+                        <p class="subtitle">Customize your dashboard experience</p>
+                    </header>
+
+                    <div class="settings-grid">
+                        <!-- Theme Settings -->
+                        <section class="settings-card">
+                            <div class="settings-card-header">
+                                <span class="settings-icon">🎨</span>
+                                <h2>Theme Customization</h2>
+                            </div>
+                            <div class="settings-content">
+                                <div class="setting-item">
+                                    <label>Color Theme</label>
+                                    <div class="theme-selector">
+                                        <button class="theme-btn light-theme" data-theme="light">
+                                            <span class="theme-icon"></span>
+                                            <span>Light</span>
+                                        </button>
+                                        <button class="theme-btn dark-theme" data-theme="dark">
+                                            <span class="theme-icon"></span>
+                                            <span>Dark</span>
+                                        </button>
+                                        <button class="theme-btn system-theme" data-theme="system">
+                                            <span class="theme-icon"></span>
+                                            <span>System</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="setting-item">
+                                    <label>Accent Color</label>
+                                    <div class="color-picker">
+                                        <input type="color" id="accentColor" value="#0984e3">
+                                        <div class="color-preview"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Interface Settings -->
+                        <section class="settings-card">
+                            <div class="settings-card-header">
+                                <span class="settings-icon">⚙️</span>
+                                <h2>Interface Preferences</h2>
+                            </div>
+                            <div class="settings-content">
+                                <div class="setting-item">
+                                    <label>Sidebar Position</label>
+                                    <select class="settings-select">
+                                        <option value="left">Left</option>
+                                        <option value="right">Right</option>
+                                    </select>
+                                </div>
+                                <div class="setting-item">
+                                    <label>Animation Speed</label>
+                                    <input type="range" min="0.5" max="2" step="0.1" value="1" class="settings-slider">
+                                </div>
+                                <div class="setting-item">
+                                    <label>Auto-hide Sidebar</label>
+                                    <label class="switch">
+                                        <input type="checkbox" id="autoHideSidebar">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Notification Settings -->
+                        <section class="settings-card">
+                            <div class="settings-card-header">
+                                <span class="settings-icon">🔔</span>
+                                <h2>Notifications</h2>
+                            </div>
+                            <div class="settings-content">
+                                <div class="setting-item">
+                                    <label>Price Updates</label>
+                                    <label class="switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div class="setting-item">
+                                    <label>New Products</label>
+                                    <label class="switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="settings-actions">
+                        <button class="save-settings-btn" onclick="saveAllSettings()">Save Changes</button>
+                        <button class="reset-settings-btn" onclick="resetAllSettings()">
+                            <span>Reset to Defaults</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+  
+    <script src="js/layout.js"></script>
+    <script src="settings.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('themeToggle');
+            const themeStatus = document.getElementById('themeStatus');
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+            themeStatus.textContent = savedTheme === 'dark' ? 'Dark Mode' : 'Light Mode';
+
+            themeToggle.addEventListener('click', () => {
+                document.documentElement.classList.add('theme-transition');
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+                themeStatus.textContent = newTheme === 'dark' ? 'Dark Mode' : 'Light Mode';
+
+                setTimeout(() => {
+                    document.documentElement.classList.remove('theme-transition');
+                }, 300);
+            });
+        });
+    </script>
+</body>
+
+</html>

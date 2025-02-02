@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Product Catalog</title>
+    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+</head>
+
+<body class="fade-in">
+    <!-- Component Placeholders -->
+    <div id="header-placeholder"></div>
+    
+    <div class="layout-container">
+        <div id="sidebar-placeholder"></div>
+
+
+        <main class="main-content">
+            <div class="admin-container">
+                <!-- Product Catalog Header -->
+                <header class="dashboard-header">
+                    <div class="header-content">
+                        <div class="header-title">
+                            <h1 class="bounce">Product Catalog</h1>
+                            <p class="subtitle">Browse all available products</p>
+                        </div>
+                    </div>
+
+                    <!-- Admin Controls -->
+                    <div class="admin-controls">
+                        <button class="add-product-btn" onclick="showAddForm()">
+                            <span class="btn-icon">✨</span>
+                            Add New Product
+                        </button>
+                        <button class="update-prices-btn" onclick="updateAllPrices(event)">
+                            <span class="btn-icon">🔄</span>
+                            <span class="btn-text">Update All Prices</span>
+                            <div class="loader"></div>
+                        </button>
+                    </div>
+
+                    <div class="separator-section">
+                    <div class="separator-line"></div>
+                    </div>
+
+                    <!-- Search and Filter Section -->
+                    <div class="filter-section">
+                        <div class="search-bar">
+                            <input type="text" id="searchInput" placeholder="Search products...">
+                        </div>
+                    </div>
+
+                    <!-- Products List -->
+                    <div class="products-list" id="productsList">
+                        <!-- Products will be dynamically inserted here -->
+                    </div>
+                </header>
+
+                <!-- Add/Edit Product Form Modal -->
+                <div id="addProductForm" class="modal-overlay">
+                    <div class="modal-content" style="border-radius: 22px; top:12%">
+                        <div class="modal-header">
+                            <h2><span class="form-icon">✨</span> Add New Product</h2>
+                            <button type="button" class="close-btn" onclick="hideAddForm()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="productForm" class="enhanced-form">
+                                <!-- Amazon Link Field -->
+                                <div class="form-group">
+                                    <label for="amazonLink">Amazon Link <span class="required">*</span></label>
+                                    <div class="input-group">
+                                        <input type="url" id="amazonLink" required placeholder="Paste Amazon product URL here" style="color: black;">
+                                        <button type="button" class="fetch-btn" onclick="fetchAmazonDetails()">
+                                            <span class="btn-icon">📥</span>
+                                            <span>Auto-Fill</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Category Field -->
+                                <div class="form-group">
+                                    <label for="productCategory">Category <span class="required">*</span></label>
+                                    <div class="category-select-wrapper">
+                                        <select id="productCategory" required>
+                                            <option value="">Select a category</option>
+                                            <option value="electronics">Electronics</option>
+                                            <option value="fashion">Fashion</option>
+                                            <option value="home">Home & Living</option>
+                                            <option value="books">Books</option>
+                                            <option value="beauty">Beauty</option>
+                                            <option value="sports">Sports</option>
+                                        </select>
+                                        <span class="category-icon" id="categoryIcon">📱</span>
+                                    </div>
+                                </div>
+
+                                <!-- Product Name Field -->
+                                <div class="form-group">
+                                    <label for="productName">Product Name <span class="required">*</span></label>
+                                    <input type="text" id="productName" required placeholder="Enter product name" style="color: black;">
+                                </div>
+
+                                <!-- Price Field -->
+                                <div class="form-group">
+                                    <label for="productPrice">Price (INR) <span class="required" style="color: black;">*</span></label>
+                                    <div class="price-input-wrapper">
+                                        <span class="currency-symbol" style="color: red;">₹</span>
+                                        <input type="number" id="productPrice" required min="0" step="0.01" placeholder="0.00" style="color: black;">
+                                    </div>
+                                </div>
+
+                                <!-- Description Field -->
+                                <div class="form-group">
+                                    <label for="productDescription">Description <span class="required">*</span></label>
+                                    <div class="description-editor">
+                                        <div class="editor-toolbar">
+                                            <button type="button" data-format="bold" title="Bold"><strong>B</strong></button>
+                                            <button type="button" data-format="italic" title="Italic"><em>I</em></button>
+                                            <button type="button" data-format="underline" title="Underline"><u>U</u></button>
+                                            <div class="separator"></div>
+                                            <button type="button" data-format="heading" data-level="2" title="Heading">H</button>
+                                            <button type="button" data-format="bullet-list" title="Bullet List">•</button>
+                                            <button type="button" data-format="number-list" title="Number List">1.</button>
+                                            <div class="separator"></div>
+                                            <button type="button" data-format="color" title="Text Color">
+                                                <input type="color" id="textColor" value="#000000">
+                                            </button>
+                                            <select class="font-family" title="Font Family">
+                                                <option value="Arial">Arial</option>
+                                                <option value="Times New Roman">Times New Roman</option>
+                                                <option value="Courier New">Courier New</option>
+                                                <option value="Georgia">Georgia</option>
+                                            </select>
+                                            <select class="font-size" title="Font Size">
+                                                <option value="12px">12px</option>
+                                                <option value="14px">14px</option>
+                                                <option value="16px">16px</option>
+                                                <option value="18px">18px</option>
+                                                <option value="20px">20px</option>
+                                            </select>
+                                        </div>
+                                        <div class="editor-content" id="productDescription" contenteditable="true" required></div>
+                                        <textarea id="descriptionHtml" name="description" style="display: none;"></textarea>
+                                    </div>
+                                </div>
+
+                                <!-- Image Upload Zone -->
+                                <div class="form-group">
+                                    <label>Product Image</label>
+                                    <div class="file-upload-zone" id="dropZone">
+                                        <input type="file" id="productImage" accept="image/*" multiple style="display: none;">
+                                        <div class="upload-content">
+                                            <i class="upload-icon">🖼️</i>
+                                            <p>Drag & drop product images here<br>
+                                                <small>or click to browse</small>
+                                            </p>
+                                            <button type="button" class="upload-btn" onclick="document.getElementById('productImage').click()">
+                                                Choose Files
+                                            </button>
+                                        </div>
+                                        <div id="imagePreview" class="image-preview-grid"></div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" form="productForm" class="submit-btn">Add Product</button>
+                            <button type="button" class="cancel-btn" onclick="hideAddForm()">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="js/layout.js"></script>
+    <script src="admin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProducts();
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', function() {
+                const query = searchInput.value.toLowerCase();
+                const filteredProducts = products.filter(product => 
+                    product.name.toLowerCase().includes(query) ||
+                    product.description.toLowerCase().includes(query)
+                );
+                displayProducts(filteredProducts);
+            });
+        });
+    </script>
+</body>
+
+</html>
