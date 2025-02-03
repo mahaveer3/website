@@ -488,18 +488,16 @@ header {
 }
 
 .product-title {
-    font-size: 25px;
+    font-size: 20px;
     font-weight: 600;
     color: #1a1a1a;
     margin: 10px 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: 1rem; /* Reduced font size */
 }
 
 .product-price {
-    font-size: 1.4rem;
     font-weight: 700;
     color: #3b82f6;
     font-size: 1.2rem; /* Reduced font size */
@@ -695,12 +693,13 @@ header {
     }
 }
 
+/* Update Product Popup Layout */
 .popup-content {
     display: grid;
-    grid-template-columns: 0.8fr 1.5fr; /* Adjusted ratio to give more space to details */
+    grid-template-columns: 1.2fr 1fr; /* Change to equal proportions */
     gap: 35px;
     padding: 35px;
-    height: auto;
+    height: 100%; /* Change from auto to 100% */
     overflow: hidden;
 }
 
@@ -774,6 +773,7 @@ header {
     
 }
 
+/* Update Popup Details */
 .popup-details {
     padding: 35px;
     display: flex;
@@ -781,13 +781,13 @@ header {
     gap: 30px;
     background: white;
     border-radius: 25px;
-    height: 76%;
+    height: 100% !important; /* Force consistent height */
     overflow-y: auto;
     position: relative;
     border-color: black;
     box-shadow: 0px 2px 10px 0px rgba(0, 103, 126, 0.43);
     border: 1px solid rgba(0, 0, 0, 0.03);
-    margin-left: -85px;
+    margin-left: 0; /* Remove negative margin */
     width: auto;  /* Ensure it takes full width of its grid column */
 }
 
@@ -799,16 +799,16 @@ header {
 }
 
 .product-name {
-    font-size: 30px;
-    font-weight: 700;
+    font-size: 25px;
+    font-weight: 600;
     background: linear-gradient(135deg, #1a1a1a 0%, #4a4a4a 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     line-height: 1.3;
     letter-spacing: -0.5px;
-    margin-bottom: 20px;
-    margin: 0;
+    margin-bottom: 30px;
+    /* margin: 0; */
     padding: 0;
 }
 
@@ -821,7 +821,7 @@ header {
     transition: all 0.4s ease;
     position: relative;
     overflow: hidden;
-    margin: 0px 0;
+    margin-bottom: 30px;
     transform: translateY(10px);
     opacity: 0;
     animation: slideUp 0.4s 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
@@ -1053,12 +1053,15 @@ header {
     box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
 }
 
+/* Update Product Gallery */
 .product-gallery {
-    top: -1%;
-    width: 90%;
+    width: 100%; /* Change from 90% to 100% */
     display: flex;
     gap: 20px;
-    height: 77%;
+    height: 100% !important; /* Force consistent height */
+    min-height: 600px;
+    max-height: 700px;
+    overflow: hidden;
     flex-direction: column !important;
     align-items: flex-start;
     background: white;
@@ -1094,49 +1097,43 @@ header {
     scroll-behavior: smooth;
     /* Add custom scrollbar styles */
     scrollbar-color: #000000;
+    height: 85px !important; /* Fixed height for thumbnails */
+    margin-top: auto; /* Push to bottom */
+    scrollbar-width:none;
+    scrollbar-color: rgba(135, 135, 135, 0.104) transparent;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 10px; /* Add padding for scrollbar */
 }
 
 .gallery-thumbs::-webkit-scrollbar {
-    width: 8px;
+    height: 6px;
+    width: 6px;
 }
 
 .gallery-thumbs::-webkit-scrollbar-track {
-    background: transparent;
-    border-radius: 15px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    margin: 0 50px; /* Add margin to shorten track length */
 }
 
 .gallery-thumbs::-webkit-scrollbar-thumb {
-    background: #000000;
+    background: linear-gradient(135deg, #3b82f6, #60a5fa);
     border-radius: 10px;
     border: 2px solid transparent;
+    background-clip: padding-box;
 }
 
 .gallery-thumbs::-webkit-scrollbar-thumb:hover {
-    background: #a0aec0;
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
 }
 
-.gallery-thumb {
-    flex: 0 0 auto;
-    min-width: 70px;
-    width: 70px;
-    height: 70px;
-    border-radius: 12px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
-    opacity: 0.7;
+/* Dark mode support */
+[data-theme="dark"] .gallery-thumbs {
+    scrollbar-color: rgba(96, 165, 250, 0.5) rgba(0, 0, 0, 0.2);
 }
 
-.gallery-thumb:hover {
-    opacity: 1;
-    transform: translateY(-2px);
-}
-
-.gallery-thumb.active {
-    opacity: 1;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+[data-theme="dark"] .gallery-thumbs::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .gallery-thumbs {
@@ -1503,56 +1500,36 @@ header {
 }
 
 .buy-btn {
-    padding: 18px 40px;
-    background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+    padding: 16px 32px;
+    background: linear-gradient(135deg, #FF9900, #FFC266);
     border: none;
     border-radius: 16px;
-    color: white;
-    font-weight: 600;
-    font-size: 1.2rem;
+    color: #000;
+    font-weight: 700;
+    font-size: 1.1rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 12px;
     transition: all 0.4s ease;
     text-decoration: none;
-    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.25),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    width: auto;
-    min-width: 200px;  /* Increased from 160px */
+    box-shadow: 0 8px 20px rgba(255, 153, 0, 0.25);
+    width: 100%;
     position: relative;
     overflow: hidden;
     transform: translateY(0);
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    box-shadow: 
-        0 4px 15px rgba(59, 130, 246, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    transform: translateY(0);
-    opacity: 0;
     animation: fadeInUp 0.4s 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    width: 100%;
-    padding: 16px 32px;
-    font-size: 1.1rem;
-    justify-content: center;
-    margin: 0;
-}
-
-.buy-btn:hover {
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 12px 25px rgba(59, 130, 246, 0.35),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
-    transform: translateY(-2px) scale(1.02);
-    background: linear-gradient(135deg, #2563eb, #1d4ed8);
-    box-shadow: 
-        0 6px 20px rgba(59, 130, 246, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .buy-btn::before {
     content: '🛒';
-    font-size: 1.3rem;  /* Increased from 1.1rem */
-    margin-right: 8px;  /* Increased from 4px */
+    font-size: 1.3rem;
+}
+
+.buy-btn:hover {
+    transform: translateY(-2px) scale(1.02);
+    background: linear-gradient(135deg, #FF8800, #FFB84D);
+    box-shadow: 0 12px 25px rgba(255, 153, 0, 0.35);
 }
 
 .buy-btn::after {
@@ -1560,17 +1537,17 @@ header {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 0;
-    height: 0;
-    background: rgba(255, 255, 255, 0.2);
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.5s ease-out;
     border-radius: 50%;
-    transform: translate(-50%, -50%);
-    transition: width 0.6s ease-out, height 0.6s ease-out;
 }
 
-.buy-btn:hover::after {
-    width: 300px;
-    height: 300px;
+.buy-btn:active::after {
+    transform: translate(-50%, -50%) scale(2);
+    background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
 }
 
 /* Back to Top Button Enhancement */
@@ -1602,12 +1579,6 @@ header {
 html {
     scroll-behavior: smooth;
     scroll-padding-top: 100px;
-}
-
-/* Loading Animation Enhancement */
-.loading-spinner {
-    /* ...existing code... */
-    animation: spinner 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 @keyframes spinner {
@@ -2018,6 +1989,9 @@ html {
     width: 100%;
     order: 1; /* Place main image first */
     margin-bottom: 15px;
+    height: calc(100% - 100px) !important; /* Subtract space for thumbnails */
+    min-height: 400px;
+    max-height: 600px;
 }
 
 /* Gallery Thumbnails */
@@ -2027,7 +2001,7 @@ html {
     width: 100%;
     order: 2; /* Place thumbnails after main image */
     overflow-x: auto;
-    padding: 10px 0;
+    padding: 0px 0;
     scrollbar-width: thin;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
@@ -2039,7 +2013,7 @@ html {
 
 /* Thumbnail Scrollbar Styles */
 .gallery-thumbs::-webkit-scrollbar {
-    height: 6px;
+    height: 0px;
 }
 
 .gallery-thumbs::-webkit-scrollbar-track {
