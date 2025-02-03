@@ -47,59 +47,58 @@
         </div>
     </header>
 
-    <div class="container my-5 modern-container">
-        <!-- Move the button to the top of the container -->
-        <div class="category-toggle-wrapper top-position">
-            <button class="category-toggle-btn">
-                <span class="toggle-icon">📑</span>
-                <span class="toggle-text">Browse Categories</span>
-                <span class="toggle-arrow">▼</span>
-            </button>
-        </div>
-
-        <!-- Category Showcase -->
-        <div class="category-showcase" id="categoryShowcase" style="display: none;">
+    <!-- Add category showcase before container -->
+    <div class="top-category-section">
+        <div class="category-list">
             <div class="category-item" data-category="all">
                 <div class="category-icon">🌐</div>
                 <h3>All Products</h3>
-                <span class="item-count">0</span>
                 <div class="category-bg"></div>
             </div>
             <div class="category-item" data-category="electronics">
                 <div class="category-icon">📱</div>
                 <h3>Electronics</h3>
-                <span class="item-count">0</span>
                 <div class="category-bg"></div>
             </div>
             <div class="category-item" data-category="fashion">
                 <div class="category-icon">👕</div>
                 <h3>Fashion</h3>
-                <span class="item-count">0</span>
                 <div class="category-bg"></div>
             </div>
             <div class="category-item" data-category="home">
                 <div class="category-icon">🏠</div>
                 <h3>Home & Living</h3>
-                <span class="item-count">0</span>
                 <div class="category-bg"></div>
             </div>
             <div class="category-item" data-category="books">
                 <div class="category-icon">📚</div>
                 <h3>Books</h3>
-                <span class="item-count">0</span>
                 <div class="category-bg"></div>
             </div>
             <div class="category-item" data-category="beauty">
                 <div class="category-icon">✨</div>
                 <h3>Beauty</h3>
-                <span class="item-count">0</span>
                 <div class="category-bg"></div>
             </div>
             <div class="category-item" data-category="sports">
                 <div class="category-icon">⚽</div>
                 <h3>Sports</h3>
-                <span class="item-count">0</span>
                 <div class="category-bg"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container my-5 modern-container">
+        <!-- Remove category toggle button and showcase -->
+        <!-- Keep only the sort wrapper in top-controls -->
+        <div class="top-controls">
+            <div class="sort-wrapper">
+                <select id="sortBy" class="sort-select">
+                    <option value="default">Sort By</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="name">Name: A to Z</option>
+                </select>
             </div>
         </div>
 
