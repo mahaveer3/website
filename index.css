@@ -1055,11 +1055,12 @@ header {
 
 /* Update Product Gallery */
 .product-gallery {
+    top: -1%;
     width: 100%; /* Change from 90% to 100% */
     display: flex;
     gap: 20px;
     height: 100% !important; /* Force consistent height */
-    min-height: 600px;
+    min-height: 500px;
     max-height: 700px;
     overflow: hidden;
     flex-direction: column !important;
@@ -1099,41 +1100,49 @@ header {
     scrollbar-color: #000000;
     height: 85px !important; /* Fixed height for thumbnails */
     margin-top: auto; /* Push to bottom */
-    scrollbar-width:none;
-    scrollbar-color: rgba(135, 135, 135, 0.104) transparent;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 10px; /* Add padding for scrollbar */
 }
 
 .gallery-thumbs::-webkit-scrollbar {
-    height: 6px;
-    width: 6px;
+    width: 8px;
 }
 
 .gallery-thumbs::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.05);
-    border-radius: 10px;
-    margin: 0 50px; /* Add margin to shorten track length */
+    background: transparent;
+    border-radius: 15px;
 }
 
 .gallery-thumbs::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #3b82f6, #60a5fa);
+    background: #000000;
     border-radius: 10px;
     border: 2px solid transparent;
-    background-clip: padding-box;
 }
 
 .gallery-thumbs::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    background: #a0aec0;
 }
 
-/* Dark mode support */
-[data-theme="dark"] .gallery-thumbs {
-    scrollbar-color: rgba(96, 165, 250, 0.5) rgba(0, 0, 0, 0.2);
+.gallery-thumb {
+    flex: 0 0 auto;
+    min-width: 70px;
+    width: 70px;
+    height: 70px;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    opacity: 0.7;
 }
 
-[data-theme="dark"] .gallery-thumbs::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
+.gallery-thumb:hover {
+    opacity: 1;
+    transform: translateY(-2px);
+}
+
+.gallery-thumb.active {
+    opacity: 1;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
 .gallery-thumbs {
