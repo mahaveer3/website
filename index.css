@@ -781,7 +781,7 @@ header {
     gap: 30px;
     background: white;
     border-radius: 25px;
-    height: 100% !important; /* Force consistent height */
+    height: 99% !important; /* Force consistent height */
     overflow-y: auto;
     position: relative;
     border-color: black;
