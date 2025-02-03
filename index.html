@@ -11,7 +11,7 @@
     
     <header>
         <div class="header-container">
-            <div class="logo">
+            <div class="logo" onclick="window.location.href='index.html'">
                 <svg width="35" height="35" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -170,12 +170,15 @@
                 </div>
                 <div class="zoom-popup"></div>
                 <div class="popup-details">
-                    <h2 class="product-name"></h2>
-                    <div class="price-block">
-                        <span class="current-price"><span class="price"></span></span>
-                    </div>
-                    <div class="description-block">
-                        <h3>Product Description</h3>
+                    <div class="popup-details-content">
+                        <h2 class="product-name"></h2>
+                        <div class="price-block">
+                            <span class="current-price"><span class="price"></span></span>
+                        </div>
+                        <div class="description-block">
+                            <h3>Product Description</h3>
+                            <!-- Description content will be dynamically added here -->
+                        </div>
                     </div>
                     <div class="action-buttons">
                         <a href="#" class="buy-btn" target="_blank">
