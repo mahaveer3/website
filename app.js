@@ -547,18 +547,17 @@ app.delete('/api/products/:id', async (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 
-const server = app.listen(PORT)
-  .on('error', (error) => {
-    if (error.code === 'EADDRINUSE') {
-      console.log(`Port ${PORT} is busy, trying ${PORT + 1}`);
-      server.close();
-      app.listen(PORT + 1, () => {
-        console.log(`Server running on port ${PORT + 1}`);
-      });
-    } else {
-      console.error('Server error:', error);
-    }
-  })
-  .on('listening', () => {
+// Add error handling for port conflicts
+const server = app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
-  });
+}).on('error', (error) => {
+    if (error.code === 'EADDRINUSE') {
+        console.log(`Port ${PORT} is busy, trying ${PORT + 1}`);
+        server.close();
+        app.listen(PORT + 1, () => {
+            console.log(`Server running on port ${PORT + 1}`);
+        });
+    } else {
+        console.error('Server error:', error);
+    }
+});

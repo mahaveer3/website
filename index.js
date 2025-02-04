@@ -1,4 +1,6 @@
-const BASE_URL = 'http://localhost:5000'; // Add this at the top
+const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:5000'  // or http://localhost:5001 if port 5000 was busy
+    : 'https://your-production-api.com';
 
 function addAnimationDelays() {
     document.querySelectorAll('.product-card').forEach((card, index) => {
@@ -10,7 +12,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('searchInput');
     const searchClose = document.querySelector('.search-close');
     
-    // Clear search input
     searchClose.addEventListener('click', () => {
         searchInput.value = '';
         searchInput.focus();
@@ -109,8 +110,8 @@ async function loadProducts() {
     productsList.innerHTML = '';
 
     try {
-        const response = await fetch(`${BASE_URL}/api/products`);
-        if (!response.ok) throw new Error('Server response was not ok');
+        const response = await fetch(`${API_URL}/api/products`);
+        if (!response.ok) throw new Error('Failed to fetch products');
         
         const data = await response.json();
         products = data;
@@ -118,13 +119,8 @@ async function loadProducts() {
         displayProducts(products);
     } catch (error) {
         console.error('Error loading products:', error);
-        errorContainer.innerHTML = `
-            <div class="error-message">
-                Failed to load products. Please make sure the server is running.
-                <button onclick="loadProducts()">Retry</button>
-            </div>
-        `;
-        errorContainer.style.display = 'block';
+        errorContainer.innerHTML = `<p>Connection failed. Please check if the server is running on ${API_URL}</p>
+            <button onclick="loadProducts()" class="retry-btn">Try Again</button>`;
     } finally {
         loadingSpinner.style.display = 'none';
         toggleSkeletonLoader(false);
@@ -144,7 +140,6 @@ function displayProducts(productsData) {
         const productCard = document.createElement('div');
         productCard.className = 'product-card';
         
-        // Handle both single image and images array
         const images = getProductImages(product);
         const mainImage = images.length > 0 
             ? images[0] 
@@ -152,6 +147,7 @@ function displayProducts(productsData) {
 
         productCard.innerHTML = `
             <div class="product-image-container">
+                <img src="${mainImage}" class="product-img" alt="${product.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2VlZSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjgiIGZpbGw9IiNhYWEiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5ObyBJbWFnZTwvdGV4dD48L3N2Zz4='">
                 <img src="${mainImage}" class="product-img" alt="${product.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2VlZSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjgiIGZpbGw9IiNhYWEiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5ObyBJbWFnZTwvdGV4dD48L3N2Zz4='">
             </div>
             <div class="product-details">
@@ -161,7 +157,7 @@ function displayProducts(productsData) {
                 <div class="product-actions">
                     <button class="view-more-btn">View More</button>
                     <button class="wishlist-btn">♥</button>
-                </div>
+                    <button class="wishlist-btn">♥</button>
             </div>
         `;
         
