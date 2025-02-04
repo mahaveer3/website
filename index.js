@@ -1,3 +1,5 @@
+const BASE_URL = 'http://localhost:5000'; // Add this at the top
+
 function addAnimationDelays() {
     document.querySelectorAll('.product-card').forEach((card, index) => {
         card.style.setProperty('--i', index);
@@ -107,8 +109,8 @@ async function loadProducts() {
     productsList.innerHTML = '';
 
     try {
-        const response = await fetch('http://127.0.0.1:5000/api/products');
-        if (!response.ok) throw new Error('Failed to fetch products');
+        const response = await fetch(`${BASE_URL}/api/products`);
+        if (!response.ok) throw new Error('Server response was not ok');
         
         const data = await response.json();
         products = data;
@@ -116,6 +118,12 @@ async function loadProducts() {
         displayProducts(products);
     } catch (error) {
         console.error('Error loading products:', error);
+        errorContainer.innerHTML = `
+            <div class="error-message">
+                Failed to load products. Please make sure the server is running.
+                <button onclick="loadProducts()">Retry</button>
+            </div>
+        `;
         errorContainer.style.display = 'block';
     } finally {
         loadingSpinner.style.display = 'none';
