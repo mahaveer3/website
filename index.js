@@ -535,3 +535,26 @@ function initScrollReveal() {
 
     elements.forEach(el => observer.observe(el));
 }
+
+// Update the handleFiles function to work with image URLs
+async function handleFiles(files) {
+    for (let file of files) {
+        try {
+            // Instead of uploading the file, you could:
+            // 1. Convert it to base64 and send to a cloud storage service
+            // 2. Or use direct image URLs from Amazon
+            const imageUrl = URL.createObjectURL(file);
+            uploadedImages.push({
+                id: Date.now(),
+                url: imageUrl,
+                name: file.name
+            });
+            updateImagePreviews();
+        } catch (error) {
+            console.error('Error handling file:', error);
+            showCustomAlert('Error', 'Failed to process image');
+        }
+    }
+}
+
+// ...existing code...

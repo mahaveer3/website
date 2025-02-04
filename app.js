@@ -4,41 +4,9 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const { MongoClient } = require('mongodb'); // Fix: Destructure MongoClient
-const multer = require('multer');
-const path = require('path');
 const axios = require('axios');
 const cheerio = require('cheerio');
 const { v4: uuidv4 } = require('uuid');
-
-// Create absolute path for uploads directory
-const uploadsDir = path.join(__dirname, 'uploads');
-
-// Configure multer for image upload
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, uploadsDir);
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
-});
-
-const upload = multer({ 
-    storage: storage,
-    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
-    fileFilter: function (req, file, cb) {
-        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-            return cb(new Error('Only image files are allowed!'), false);
-        }
-        cb(null, true);
-    }
-});
-
-// Create uploads directory if it doesn't exist
-const fs = require('fs');
-if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir, { recursive: true });
-}
 
 const app = express();
 
@@ -47,9 +15,6 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
-
-// Serve static files from uploads directory
-app.use('/uploads', express.static(uploadsDir));
 
 // MongoDB Connection
 const dbURI = 'mongodb+srv://mahaveerkankaria6:dKd7riYqBkgiacGu@cluster0.uuziw.mongodb.net/website?retryWrites=true&w=majority&appName=Cluster0';
@@ -90,40 +55,18 @@ app.post('/api/products', async (req, res) => {
     }
 });
 
-// Add image upload endpoint
-app.post('/api/uploads', upload.single('image'), (req, res) => {
+// Replace file upload endpoint with URL-based approach
+app.post('/api/uploads', async (req, res) => {
     try {
-        if (!req.file) {
-            return res.status(400).json({ error: 'No file uploaded' });
+        const { imageUrl } = req.body;
+        if (!imageUrl) {
+            return res.status(400).json({ error: 'No image URL provided' });
         }
-
-        // Ensure the URL uses the correct protocol and port
-        const serverUrl = req.protocol + '://' + req.get('host');
-        const imageUrl = `${serverUrl}/uploads/${req.file.filename}`;
         
         res.json({ imageUrl });
     } catch (error) {
         console.error('Upload error:', error);
         res.status(500).json({ error: error.message });
-    }
-});
-
-// Add new endpoint to delete uploaded images
-app.delete('/api/uploads/:filename', (req, res) => {
-    try {
-        const filePath = path.join(uploadsDir, req.params.filename);
-        
-        // Check if file exists
-        if (fs.existsSync(filePath)) {
-            // Delete the file
-            fs.unlinkSync(filePath);
-            res.status(200).json({ message: 'File deleted successfully' });
-        } else {
-            res.status(404).json({ error: 'File not found' });
-        }
-    } catch (error) {
-        console.error('Error deleting file:', error);
-        res.status(500).json({ error: 'Failed to delete file' });
     }
 });
 
