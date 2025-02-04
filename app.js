@@ -8,6 +8,7 @@ const multer = require('multer');
 const path = require('path');
 const axios = require('axios');
 const cheerio = require('cheerio');
+const { v4: uuidv4 } = require('uuid');
 
 // Create absolute path for uploads directory
 const uploadsDir = path.join(__dirname, 'uploads');
@@ -59,6 +60,7 @@ mongoose.connect(dbURI)
 
 // Product Schema
 const productSchema = new mongoose.Schema({
+    _id: { type: String, default: () => uuidv4() },
     name: String,
     price: Number,
     description: String,
