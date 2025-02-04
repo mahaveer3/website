@@ -19,7 +19,7 @@
   "main": "admin.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx kill-port 5000 && nodemon app.js"
+    "start": "npx kill-port 5000 && node app.js"
   },
   "keywords": [],
   "author": "",
