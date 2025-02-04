@@ -1,5 +1,5 @@
 const API_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://your-vercel-deployment-url.vercel.app'
+  ? 'https://website-nu-seven-94.vercel.app'
   : 'http://127.0.0.1:5000';
 
 function addAnimationDelays() {
