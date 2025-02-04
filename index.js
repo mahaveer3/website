@@ -1,3 +1,7 @@
+const API_URL = process.env.NODE_ENV === 'production' 
+  ? 'https://your-vercel-deployment-url.vercel.app'
+  : 'http://127.0.0.1:5000';
+
 function addAnimationDelays() {
     document.querySelectorAll('.product-card').forEach((card, index) => {
         card.style.setProperty('--i', index);
@@ -107,7 +111,7 @@ async function loadProducts() {
     productsList.innerHTML = '';
 
     try {
-        const response = await fetch('http://127.0.0.1:5000/api/products');
+        const response = await fetch(`${API_URL}/api/products`);
         if (!response.ok) throw new Error('Failed to fetch products');
         
         const data = await response.json();
